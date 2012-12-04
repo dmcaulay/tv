@@ -19,23 +19,27 @@ var list = function(cmd, json) {
   return routes[cmd].list(json)
 }
 
+var renderShows = function() {
+  if (currentUser.shows.length) {
+    console.log('shows')
+    async.map(currentUser.shows, function(showId, done) {
+      router.handle({cmd: 'episodeList', args: [showId]}, {list: true}, done)
+    }, function(err, results) {
+      episodes = _.flatten(results)
+      episodes = _.sortBy(episodes, 'airdate').reverse()
+      episodes.forEach(function(ep) {
+        console.log(ep.show + ' - ' + ep.number + ' - ' + ep.title + ' - ' + moment(ep.airdate).fromNow())
+      })
+    })
+  }
+}
+
 var login = function(name) {
   return db.users.findOne({name: name}, function(err, user) {
     function handleLogin(user) {
       console.log('welcome ' + user.name)
       currentUser = user
-      if (user.shows.length) {
-        console.log('shows')
-        async.map(user.shows, function(showId, done) {
-          router.handle({cmd: 'episodeList', args: [showId]}, {list: true}, done)
-        }, function(err, results) {
-          episodes = _.flatten(results)
-          episodes = _.sortBy(episodes, 'airdate').reverse()
-          episodes.forEach(function(ep) {
-            console.log(ep.show + ' - ' + ep.number + ' - ' + ep.title + ' - ' + moment(ep.airdate).fromNow())
-          })
-        })
-      }
+      renderShows()
     }
     if (err) return console.log('db err', err)
     if (user) return handleLogin(user) 
