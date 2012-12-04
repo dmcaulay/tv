@@ -58,6 +58,11 @@ var save = function(showId) {
 
 var router = module.exports = {
   handle: function(route, options, callback) {
+    function done(json) {
+      cache[url] = json
+      var result = options.list ? list(route.cmd, json) : render(route.cmd, json)
+      callback && callback(null, result)
+    }
     if (callback === null) {
       callback = options
       options = {}
@@ -66,14 +71,12 @@ var router = module.exports = {
     if (route.cmd === 'save') return save(route.args[0])
     if (!routes[route.cmd]) return console.log('unknown cmd', route.cmd)
     var url = routes[route.cmd].url.apply(null, route.args)
-    if (cache[url]) return render(route.cmd, cache[url])
+    if (cache[url]) return done(cache[url])
     request({url:url,timeout:20000}, function(err, res, body) {
       if (err) return console.log('err', err)
       parser.parseString(body, function(err, json) {
         if (err) return console.log('err', err)
-        cache[url] = json
-        var result = options.list ? list(route.cmd, json) : render(route.cmd, json)
-        callback && callback(null, result)
+        done(json)
       })
     })
   }
