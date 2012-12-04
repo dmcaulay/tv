@@ -1,54 +1,81 @@
 
-module.exports = {
-  search: {
-    url: function() {
-      var args = Array.prototype.slice.call(arguments)
-      var show = args.join(' ')
-      return 'http://services.tvrage.com/feeds/search.php?show=' + show
-    },
-    render: function(res) {
-      res.Results.show.forEach(function(show, index) {
-        console.log(index + '.', show.name[0])
-      })
-      return {
-        cmd: 'episodeList',
-        args: res.Results.show.map(function(show) { return show.showid })
-      }
-    }
-  },
-  showInfo: {
-    url: function(showId) {
-      return 'http://services.tvrage.com/feeds/showinfo.php?sid=' + showId
-    },
-    render: function(res) {
-      console.log(res)
-      return {
-        cmd: 'episodeList',
-        args: [res.Showinfo.showid]
-      }
-    }
-  },
-  episodeList: {
-    url: function(showId) {
-      return 'http://services.tvrage.com/feeds/episode_list.php?sid=' + showId
-    },
-    render: function(res) {
-      console.log(res.Show.name[0])
-      res.Show.Episodelist.forEach(function(list) {
-        list.Season.forEach(function(item) {
-          var s = item.$.no
-          item.episode.forEach(function(e) {
-            console.log(e.airdate[0], 's'+s+'e'+e.seasonnum[0], e.title[0])
+var async = require('async')
+var moment = require('moment')
+var request = require('request')
+var routes = require('./routes')
+var db = require('../lib/mongoWrapper').db.add('users')
+var xml2js = require('xml2js')
+var _ = require('underscore')
+
+var cache = {}
+var currentUser
+var parser = new xml2js.Parser()
+
+var render = function(cmd, json) {
+  return routes[cmd].render(json)
+}
+
+var list = function(cmd, json) {
+  return routes[cmd].list(json)
+}
+
+var login = function(name) {
+  return db.users.findOne({name: name}, function(err, user) {
+    function handleLogin(user) {
+      console.log('welcome ' + user.name)
+      currentUser = user
+      if (user.shows.length) {
+        console.log('shows')
+        async.map(user.shows, function(showId, done) {
+          router.handle({cmd: 'episodeList', args: [showId]}, {list: true}, done)
+        }, function(err, results) {
+          episodes = _.flatten(results)
+          episodes = _.sortBy(episodes, 'airdate').reverse()
+          episodes.forEach(function(ep) {
+            console.log(ep.show + ' - ' + ep.number + ' - ' + ep.title + ' - ' + moment(ep.airdate).fromNow())
           })
         })
-      })
-      return {
-        cmd: 'showInfo'
       }
     }
-  },
-  episodeInfo: function(episodeId) {
-    return 'http://services.tvrage.com/feeds/episodeinfo.php?sid=' + showId + '&ep=' + episodeId
+    if (err) return console.log('db err', err)
+    if (user) return handleLogin(user) 
+    var newUser = {name: name, shows: []}
+    db.users.save(newUser, function(err) {
+      if (err) return console.log('db err', err)
+      handleLogin(newUser)
+    })
+  })
+}
+
+var save = function(showId) {
+  if (!currentUser) return console.log('save err: not logged in')
+  if (~currentUser.shows.indexOf(showId)) return console.log('save err: already watching that show')
+  currentUser.shows.push(showId)
+  db.users.save(currentUser, function(err) {
+    if (err) return console.log('db err', err)
+  })
+}
+
+var router = module.exports = {
+  handle: function(route, options, callback) {
+    if (callback === null) {
+      callback = options
+      options = {}
+    }
+    if (route.cmd === 'login') return login(route.args[0])
+    if (route.cmd === 'save') return save(route.args[0])
+    if (!routes[route.cmd]) return console.log('unknown cmd', route.cmd)
+    var url = routes[route.cmd].url.apply(null, route.args)
+    if (cache[url]) return render(route.cmd, cache[url])
+    request({url:url,timeout:20000}, function(err, res, body) {
+      if (err) return console.log('err', err)
+      parser.parseString(body, function(err, json) {
+        if (err) return console.log('err', err)
+        cache[url] = json
+        var result = options.list ? list(route.cmd, json) : render(route.cmd, json)
+        callback && callback(null, result)
+      })
+    })
   }
 }
 

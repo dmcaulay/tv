@@ -2,9 +2,6 @@
   "db": {
     "name": "tv_db", 
     "host": "localhost", 
-    "port": 27017, 
-    "auth": true, 
-    "user": "admin", 
-    "pass": "pass" 
+    "port": 27017
   }
 }
