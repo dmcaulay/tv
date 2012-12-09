@@ -13,7 +13,20 @@ body {
   background-color: black;
   color: white;
   font-family: 'MuseoSlab', Arial, sans-serif;
+  font-size: 25px;
   text-align: center;
+}
+
+input {
+  background-color: white;
+  color: black;
+  font-family: 'MuseoSlab', Arial, sans-serif;
+  font-size: 25px;
+  text-align: left;
+}
+
+#search {
+  padding: 10px 10px;
 }
 
 #content {
@@ -22,7 +35,8 @@ body {
 
 .episode {
   color: white;
-  padding: 5px 5px;
+  padding: 25px 5px;
+  border-bottom: 1px inset #333
 }
 .episode:after { 
   content: "."; 
@@ -32,23 +46,50 @@ body {
   clear: both;
 }
 
+.showinfo {
+  color: white;
+  padding: 25px 5px;
+  border-bottom: 1px inset #333
+}
+.showinfo:after { 
+  content: "."; 
+  visibility: hidden; 
+  display: block; 
+  height: 0; 
+  clear: both;
+}
+
 .show {
   float: left;
-  width: 200px;
+  width: 25%;
 }
 
 .number {
   float: left;
-  width: 75px
+  width: 10%;
 }
 
 .title {
   float: left;
-  padding: 0px 10px
+  width: 35%;
+}
+
+.network {
+  float: left;
+  width: 10%;
 }
 
 .date {
   float: right;
+}
+
+.name {
+  float: left;
+}
+
+.plus {
+  float: right;
+  padding-right: 20px;
 }
 
 .watched {

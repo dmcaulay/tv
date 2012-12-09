@@ -1,3 +1,4 @@
+require('./init')
 var readline = require('readline')
 var router = require('./router')
 var last

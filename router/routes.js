@@ -15,6 +15,9 @@ var route = module.exports = {
         cmd: 'save',
         args: res.Results.show.map(function(show) { return show.showid })
       }
+    },
+    list: function(res) {
+      return res.Results.show.map(function(show) { return { name: show.name[0].toLowerCase() } })
     }
   },
   showInfo: {
@@ -26,6 +29,12 @@ var route = module.exports = {
       return {
         cmd: 'episodeList',
         args: [res.Showinfo.showid]
+      }
+    },
+    list: function(res) {
+      return {
+        name: res.Showinfo.showname[0].toLowerCase(),
+        network: res.Showinfo.network[0]._.slice(0,3).toLowerCase()
       }
     }
   },
@@ -54,9 +63,9 @@ var route = module.exports = {
           var s = item.$.no
           item.episode.forEach(function(e) {
             episodes.push({
-              show: res.Show.name[0],
+              show: res.Show.name[0].toLowerCase(),
               airdate: new Date(moment(e.airdate[0]).toDate()),
-              title: e.title[0],
+              title: e.title[0].toLowerCase(),
               number: 's'+s+'e'+e.seasonnum[0]
             })
           })

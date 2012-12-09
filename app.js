@@ -1,3 +1,4 @@
+require('./init')
 var ecstatic = require('ecstatic')
 var flatiron = require('flatiron')
 var app = flatiron.app

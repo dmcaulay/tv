@@ -25,9 +25,16 @@ var views = {
   episodes : function(episodes, callback) {
     getTemplates(function(err, templates) {
       if (err) return callback(err)
-      episodes.forEach(function(ep) { ep.date = moment(ep.airdate).fromNow() })
+      episodes.forEach(function(ep) { ep.date = moment(ep.airdate).fromCalendar().toLowerCase() })
       episodes = Plates.bind(templates['episode'], episodes)
       callback(null, Plates.bind(templates['index'], {content:episodes}))
+    })
+  },
+  shows : function(shows, callback) {
+    getTemplates(function(err, templates) {
+      if (err) return callback(err)
+      shows = Plates.bind(templates['show'], shows)
+      callback(null, Plates.bind(templates['index'], {content:shows}))
     })
   }
 }
