@@ -17,6 +17,10 @@ body {
   text-align: center;
 }
 
+a:link, a:visited, a:active {
+  color: white;
+}
+
 input {
   background-color: white;
   color: black;
@@ -63,6 +67,9 @@ input {
   float: left;
   width: 25%;
 }
+.show:hover {
+  text-decoration:underline;
+}
 
 .number {
   float: left;
@@ -85,6 +92,9 @@ input {
 
 .name {
   float: left;
+}
+.name:hover {
+  text-decoration:underline;
 }
 
 .plus {

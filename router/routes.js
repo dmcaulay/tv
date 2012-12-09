@@ -17,7 +17,9 @@ var route = module.exports = {
       }
     },
     list: function(res) {
-      return res.Results.show.map(function(show) { return { name: show.name[0].toLowerCase() } })
+      return res.Results.show.map(function(show) { 
+        return { showid: show.showid, name: show.name[0].toLowerCase() }
+      })
     }
   },
   showInfo: {
@@ -33,6 +35,7 @@ var route = module.exports = {
     },
     list: function(res) {
       return {
+        showid: res.Showinfo.showid,
         name: res.Showinfo.showname[0].toLowerCase(),
         network: res.Showinfo.network[0]._.slice(0,3).toLowerCase()
       }

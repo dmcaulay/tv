@@ -25,15 +25,31 @@ var views = {
   episodes : function(episodes, callback) {
     getTemplates(function(err, templates) {
       if (err) return callback(err)
-      episodes.forEach(function(ep) { ep.date = moment(ep.airdate).fromCalendar().toLowerCase() })
-      episodes = Plates.bind(templates['episode'], episodes)
+      episodes.forEach(function(ep) { 
+        ep.date = moment(ep.airdate).fromCalendar().toLowerCase()
+        ep.showLink = '/shows/' + ep.showid
+      })
+      var map = new Plates.Map()
+      map.class('showLink').use('showLink').as('href')
+      map.class('show').use('show')
+      map.class('number').use('number')
+      map.class('title').use('title')
+      map.class('network').use('network')
+      map.class('date').use('date')
+      episodes = Plates.bind(templates['episode'], episodes, map)
       callback(null, Plates.bind(templates['index'], {content:episodes}))
     })
   },
   shows : function(shows, callback) {
     getTemplates(function(err, templates) {
       if (err) return callback(err)
-      shows = Plates.bind(templates['show'], shows)
+      shows.forEach(function(show) { 
+        show.showLink = '/shows/' + show.showid
+      })
+      var map = new Plates.Map()
+      map.class('showLink').use('showLink').as('href')
+      map.class('name').use('name')
+      shows = Plates.bind(templates['show'], shows, map)
       callback(null, Plates.bind(templates['index'], {content:shows}))
     })
   }
