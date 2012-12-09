@@ -25,4 +25,4 @@ rl.on('line', function (cmd) {
   router.handle(route, function(err, next) {
     last = next
   })
-});
+})

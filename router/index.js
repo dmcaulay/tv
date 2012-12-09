@@ -67,7 +67,7 @@ var router = module.exports = {
       var result = options.list ? list(route.cmd, json) : render(route.cmd, json)
       callback && callback(null, result)
     }
-    if (callback === null) {
+    if (!callback) {
       callback = options
       options = {}
     }

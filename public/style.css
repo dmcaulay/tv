@@ -16,12 +16,42 @@ body {
   text-align: center;
 }
 
-.item {
-  border-bottom: 1px solid #535353;
+#content {
+  text-align: left;
+}
+
+.episode {
   color: white;
+  padding: 5px 5px;
+}
+.episode:after { 
+  content: "."; 
+  visibility: hidden; 
+  display: block; 
+  height: 0; 
+  clear: both;
+}
+
+.show {
+  float: left;
+  width: 200px;
+}
+
+.number {
+  float: left;
+  width: 75px
+}
+
+.title {
+  float: left;
+  padding: 0px 10px
+}
+
+.date {
+  float: right;
 }
 
 .watched {
-  background-color: #404040;
   color: #777;
 }
+

@@ -32,7 +32,6 @@ var views = {
   }
 }
 
-
 module.exports = function(res, name) {
   function render(err, text) {
     if (err) res.end(err.stack)

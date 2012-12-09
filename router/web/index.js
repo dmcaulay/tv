@@ -13,7 +13,8 @@ module.exports = function(router) {
         api.handle({cmd: 'episodeList', args: [showId]}, {list: true}, done)
       }, function(err, results) {
         var episodes = _.flatten(results)
-        episodes = _.sortBy(episodes, 'airdate').reverse()
+        episodes = episodes.filter(function(ep) { return ep.airdate > (new Date()) })
+        episodes = _.sortBy(episodes, 'airdate')
         render(res, 'episodes', episodes)
       })
     })
