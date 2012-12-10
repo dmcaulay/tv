@@ -3,6 +3,7 @@ var request = require('./lib/request')
 var querystring = require('querystring')
 
 $(document).ready(function() {
+  // episode
   $('.watched').hide()
   $('.episode').click(function(ev) {
     var watched = ev.target.className === 'watched'
@@ -16,6 +17,22 @@ $(document).ready(function() {
       $episode.find('.watched').hide()
     } else {
       $episode.find('.watched').show()
+    }
+  })
+
+  // show
+  $('.show').click(function(ev) {
+    var added = ev.target.className === 'added'
+    var $show = (ev.target.className === 'show') ? $(ev.target) : $(ev.target.parentElement)
+    var showid = $episode.data('showid')
+    var path = added ? '/remove' : '/add'
+    request({method: 'POST', path: path, json: {showid: showid}, function(err, body) {
+      console.log('res', err, body)
+    })
+    if (added) {
+      $show.find('.added').hide()
+    } else {
+      $show.find('.added').show()
     }
   })
 })

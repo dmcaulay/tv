@@ -1,4 +1,5 @@
 var apiCall = require('./apiCall')('http://services.tvrage.com/feeds/')
+var async = require('async')
 var moment = require('moment')
 
 var search = function(show, callback) {
@@ -42,12 +43,25 @@ var episodeList = function(showid, callback) {
   })
 }
 
+var episodes = function(showid, callback) {
+  async.parallel({
+    info: showinfo.bind(null, showid),
+    episodes: episodeList.bind(null, showid)
+  }, function(err, show) {
+    if (err) return callback(err)
+    show.episodes.forEach(function(ep) {
+      ep.network = show.info.network
+      ep.showid = show.info.showid
+    })
+    callback(null, show.episodes)
+  })
+}
+
 // episodeInfo: 'http://services.tvrage.com/feeds/episodeinfo.php?sid=' + showId + '&ep=' + episodeId
 
 module.exports = {
   search: search,
-  showinfo: showinfo,
-  episodeList: episodeList
+  episodes: episodes
 }
 
 
