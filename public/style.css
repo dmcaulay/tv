@@ -40,7 +40,9 @@ input {
 .episode {
   color: white;
   padding: 25px 5px;
-  border-bottom: 1px inset #333
+  border-bottom: 1px inset #333;
+  cursor: pointer;
+  position: relative;
 }
 .episode:after { 
   content: "."; 
@@ -53,7 +55,8 @@ input {
 .showinfo {
   color: white;
   padding: 25px 5px;
-  border-bottom: 1px inset #333
+  border-bottom: 1px inset #333;
+  cursor: pointer;
 }
 .showinfo:after { 
   content: "."; 
@@ -103,6 +106,15 @@ input {
 }
 
 .watched {
+  background-color: #333;
   color: #777;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: center;
+  opacity: 0.9;
+  font-size: 60px;
 }
 
