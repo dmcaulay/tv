@@ -6,7 +6,7 @@ var search = function(show, callback) {
   apiCall('search.php?show=' + show, function(err, res) {
     if (err) return callback(err)
     callback(null, res.Results.show.map(function(show) { 
-      return { showid: show.showid, name: show.name[0].toLowerCase() }
+      return { showid: show.showid[0], name: show.name[0].toLowerCase() }
     }))
   })
 }
@@ -15,7 +15,7 @@ var showinfo = function(showid, callback) {
   apiCall('showinfo.php?sid=' + showid, function(err, res) {
     if (err) return callback(err)
     callback(null, {
-      showid: res.Showinfo.showid,
+      showid: res.Showinfo.showid[0],
       name: res.Showinfo.showname[0].toLowerCase(),
       network: res.Showinfo.network[0]._.slice(0,3).toLowerCase()
     })

@@ -19,6 +19,20 @@ function initUser(callback) {
   })
 }
 
+function addShow(user, showid) {
+  user.shows.push(showid)
+  db.users.update({name: user.name}, {$addToSet: {shows: showid}}, function(err) {
+    if (err) console.log('err',err)
+  })
+}
+
+function removeShow(user, showid) {
+  if (~user.shows.indexOf(showid)) user.shows.splice(user.shows.indexOf(showid), 1)
+  db.users.update({name: user.name}, {$pull: {shows: showid}}, function(err) {
+    if (err) console.log('err',err)
+  })
+}
+
 function handleError(res, err) {
   res.end(err.stack)
 }
@@ -28,42 +42,86 @@ module.exports = function(router) {
     var res = this.res
     getUser(function(err, user) {
       if (err) return handleError(res, err)
-      async.map(user.shows, tvrage.episodes, function(err, episodes) {
+      db.episodes.find({user: user.name, subscribed: true}, function(err, cursor) {
         if (err) return handleError(res, err)
-        episodes = _.flatten(episodes)
-        episodes = episodes.filter(function(ep) { return ep.airdate > (new Date()) })
-        episodes = _.sortBy(episodes, 'airdate')
-        render(res, 'episodes', episodes)
+        cursor.toArray(function(err, episodes) {
+          if (err) return handleError(res, err)
+          episodes = episodes.filter(function(ep) { return ep.airdate > (new Date()) })
+          episodes = _.sortBy(episodes, 'airdate')
+          render(res, 'episodes', episodes)
+        })
       })
     })
   })
 
   router.post('/watched', function() {
-    this.res.end('watched')
-    console.log(this.req.body)
+    var body = this.req.body
+    var res = this.res
+    getUser(function(err, user) {
+      if (err) return handleError(res, err)
+      db.episodes.update({user: user.name, showid: body.showid, number: body.number}, {$set: body}, function(err) {
+        if (err) return handleError(res, err)
+        res.end('success')
+      })
+    })
   })
 
   router.get('/shows/:id', function(id) {
     var res = this.res
-    tvrage.episodes(id, function(err, episodes) {
-      render(res, 'episodes', episodes)
+    getUser(function(err, user) {
+      if (err) return handleError(res, err)
+      db.episodes.find({user: user.name, showid: id}, function(err, cursor) {
+        if (err) return handleError(res, err)
+        cursor.toArray(function(err, episodes) {
+          if (err) return handleError(res, err)
+          episodes = _.sortBy(episodes, 'airdate')
+          render(res, 'episodes', episodes)
+        })
+      })
     })
   })
 
-  router.post('/add', function() {
-    this.res.end('add')
-    console.log(this.req.body)
+  router.post('/subscribe', function() {
+    var showid = this.req.body.showid
+    var res = this.res
+    getUser(function(err, user) {
+      if (err) return handleError(res, err)
+      tvrage.episodes(showid, function(err, episodes) {
+        if (err) return handleError(res, err)
+        addShow(user, showid)
+        async.forEach(episodes, function(ep, done) {
+          ep.user = user.name
+          ep.subscribed = true
+          db.episodes.update({user: user.name, showid: showid, number: ep.number}, {$set: ep}, {upsert: true, 'new': true}, done)
+        }, function(err) {
+          if (err) return handleError(res, err)
+          res.end('success')
+        })
+      })
+    })
   })
 
-  router.post('/remove', function() {
-    this.res.end('remove')
-    console.log(this.req.body)
+  router.post('/unsubscribe', function() {
+    var showid = this.req.body.showid
+    var res = this.res
+    getUser(function(err, user) {
+      if (err) return handleError(res, err)
+      removeShow(user, showid)
+      db.episodes.update({user: user.name, showid: showid}, {$set: {subscribed: false}}, {multi: true}, function(err) {
+        if (err) return handleError(res, err)
+        res.end('success')
+      })
+    })
   })
 
   router.post('/search', function() {
-    tvrage.search(this.req.body.term, function(err, shows) {
+    getUser(function(err, user) {
       if (err) return handleError(res, err)
-      render(this.res, 'shows', shows)
+      tvrage.search(this.req.body.term, function(err, shows) {
+        if (err) return handleError(this.res, err)
+        shows.forEach(function(show) { show.subscribed = !!~user.shows.indexOf(show.showid) })
+        render(this.res, 'shows', shows)
+      }.bind(this))
     }.bind(this))
   })
 }

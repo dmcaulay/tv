@@ -7,6 +7,8 @@ module.exports = function(shows, callback) {
       show.showLink = '/shows/' + show.showid
     })
     var map = new plates.Map()
+    map.class('showinfo').use('showid').as('data-showid')
+    map.class('showinfo').use('subscribed').as('data-subscribed')
     map.class('showLink').use('showLink').as('href')
     map.class('name').use('name')
     shows = plates.bind(templates['show'], shows, map)

@@ -12,6 +12,7 @@ module.exports = function(episodes, callback) {
     var map = new plates.Map()
     map.class('episode').use('showid').as('data-showid')
     map.class('episode').use('number').as('data-number')
+    map.class('episode').use('watched').as('data-watched')
     map.class('showLink').use('showLink').as('href')
     map.class('show').use('show')
     map.class('number').use('number')
