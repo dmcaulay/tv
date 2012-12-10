@@ -1,3 +1,4 @@
+var plates = require('plates')
 
 module.exports = function(shows, callback) {
   this.getTemplates(function(err, templates) {
@@ -5,10 +6,10 @@ module.exports = function(shows, callback) {
     shows.forEach(function(show) { 
       show.showLink = '/shows/' + show.showid
     })
-    var map = new Plates.Map()
+    var map = new plates.Map()
     map.class('showLink').use('showLink').as('href')
     map.class('name').use('name')
-    shows = Plates.bind(templates['show'], shows, map)
-    callback(null, Plates.bind(templates['index'], {content:shows}))
+    shows = plates.bind(templates['show'], shows, map)
+    callback(null, plates.bind(templates['index'], {content:shows}))
   })
 }
