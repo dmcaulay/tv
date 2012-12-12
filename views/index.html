@@ -2,15 +2,20 @@
 <html lang='en'>
 <head>
   <title>tv</title>
-  <link rel="stylesheet" href="http://localhost:8080/style.css">
-  <script src="http://localhost:8080/app.js"></script>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js"></script>
 </head>
 <body>
-  <div id="title">tv</div>
-  <div id="search">
-    <form method="post" action="/search">
-      <input type="text" name="term">
-    </form>
+  <div id="navbar">
+    <div id="title"><a href="/">tv</a></div>
+    <div id="search">
+      <form method="post" action="/search">
+        <input type="text" name="term">
+      </form>
+    </div>
+    <div id="shows"><a href="/shows">shows</a></div>
+    <div id="new"><a href="/new">new</a></div>
+    <div id="all"><a href="/all">all</a></div>
   </div>
   <div id="content"></div>
 </body>

@@ -23,12 +23,11 @@ $(document).ready(function() {
   $episodes = $('.episode')
   $episodes.each(function() {
     var $episode = $(this)
-    var watched = $episode.data('watched')
-    if (!watched) $episode.find('.watched').hide()
+    if (!$episode.data('watched')) $episode.find('.watched').hide()
   })
   $episodes.click(function(ev) {
-    var watched = ev.target.className === 'watched'
     var $episode = (ev.target.className === 'episode') ? $(ev.target) : $(ev.target.parentElement)
+    var watched = $episode.data('watched')
     var $selected = ev.shiftKey && lastEpisode ? getEpisodesBetween($episode, lastEpisode.$episode) : [$episode]
     if ($selected.length !== 1) watched = lastEpisode.watched
     $selected.forEach(function($episode) {
@@ -42,6 +41,7 @@ $(document).ready(function() {
       } else {
         $episode.find('.watched').show()
       }
+      $episode.data('watched', !watched)
     })
     lastEpisode = {watched: watched, $episode: $episode}
   })
@@ -50,15 +50,19 @@ $(document).ready(function() {
   $showinfos = $('.showinfo')
   $showinfos.each(function() {
     var $show = $(this)
-    var subscribed = $show.data('subscribed')
-    if (!subscribed) $show.find('.subscribed').hide()
+    if (!$show.data('subscribed')) $show.find('.subscribed').hide()
+    if (!$show.data('editable')) $show.find('.plus').hide()
   })
   $showinfos.click(function(ev) {
-    var subscribed = ev.target.className === 'subscribed'
     var $show = (ev.target.className === 'showinfo') ? $(ev.target) : $(ev.target.parentElement)
+    if (!$show.data('editable')) {
+      return window.location = $show.find('.showLink').attr('href')
+    }
+    var subscribed = $show.data('subscribed')
     var showid = $show.data('showid').toString()
+    var name = $show.data('name').toString()
     var path = subscribed ? '/unsubscribe' : '/subscribe'
-    request({method: 'POST', path: path, json: {showid: showid}}, function(err, body) {
+    request({method: 'POST', path: path, json: {showid: showid, name: name}}, function(err, body) {
       console.log('res', err, body)
     })
     if (subscribed) {
@@ -66,5 +70,6 @@ $(document).ready(function() {
     } else {
       $show.find('.subscribed').show()
     }
+    $show.data('subscribed', !subscribed)
   })
 })

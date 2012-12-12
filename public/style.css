@@ -19,6 +19,25 @@ body {
   -moz-user-select: none;
 }
 
+#navbar a {
+  text-decoration:none;
+}
+
+#title {
+  float: left;
+  padding: 10px 10px;
+}
+
+#search {
+  float: left;
+  padding: 5px 5px;
+}
+
+#new, #all, #shows {
+  float: right;
+  padding: 10px 10px;
+}
+
 a:link, a:visited, a:active {
   color: white;
 }
@@ -29,10 +48,7 @@ input {
   font-family: 'MuseoSlab', Arial, sans-serif;
   font-size: 25px;
   text-align: left;
-}
-
-#search {
-  padding: 10px 10px;
+  border-radius: 25px;
 }
 
 #content {
@@ -46,7 +62,7 @@ input {
   cursor: pointer;
   position: relative;
 }
-.episode:after, .showinfo:after { 
+.episode:after, .showinfo:after, #navbar:after { 
   content: "."; 
   visibility: hidden; 
   display: block; 
