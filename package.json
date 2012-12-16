@@ -25,5 +25,9 @@
     "mocha": "~1.7.4",
     "jquery-browserify": "~1.8.1",
     "browserify": "~1.16.6"
-  }
+  },
+  "engines": {
+    "node": "0.8.x"
+  },
+  "subdomain": "tvtrack"
 }
