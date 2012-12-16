@@ -9784,7 +9784,8 @@ module.exports = {
 require.define("/lib/request.js",function(require,module,exports,__dirname,__filename,process,global){var http = require('http')
 
 var request = module.exports = function(options,callback) {
-  options.port = options.port || 8080
+  options.port = options.port || 80 
+  options.hostname = options.hostname || 'tvtrack.jit.su'
   var req = http.request(options, function(res) {
     if (res.setEncoding) res.setEncoding('utf8')
     var body = ''

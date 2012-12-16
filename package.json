@@ -1,6 +1,6 @@
 {
   "name": "tv",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "tv listings",
   "main": "server.js",
   "scripts": {

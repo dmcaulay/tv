@@ -3,5 +3,7 @@
     "name": "tv_db", 
     "host": "localhost", 
     "port": 27017
-  }
+  },
+  "hostname": "localhost",
+  "port": 8080
 }
