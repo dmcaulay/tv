@@ -24,7 +24,11 @@
     "async": "~0.1.22",
     "mocha": "~1.7.4",
     "jquery-browserify": "~1.8.1",
-    "browserify": "~1.16.6"
+    "browserify": "~1.16.6",
+    "flatiron-passport": "0.0.4",
+    "passport-local": "~0.1.6",
+    "passport": "~0.1.15",
+    "password-hash": "~1.2.1"
   },
   "engines": {
     "node": "0.8.x"

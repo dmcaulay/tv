@@ -39,6 +39,18 @@ function handleError(res, err) {
 }
 
 module.exports = function(router) {
+  router.get('/login', function() {
+    render(this.res, 'login')
+  })
+
+  router.get('/signup', function() {
+    render(this.res, 'signup')
+  })
+
+  router.post('/signup', function() {
+    render(this.res, 'signup')
+  })
+
   var newEpisodes = function() {
     var res = this.res
     getUser(function(err, user) {

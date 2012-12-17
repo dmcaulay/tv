@@ -19,6 +19,29 @@ body {
   -moz-user-select: none;
 }
 
+form {
+  width: 500px;
+  margin: auto;
+}
+
+.login, .signup {
+  text-align: center;
+  padding: 25px 0px;
+}
+
+.field {
+  padding: 5px 0px;
+}
+
+.field-label {
+  float: left;
+  margin-top: 8px;
+}
+
+.field-input {
+  float: right;
+}
+
 #navbar a {
   text-decoration:none;
 }
@@ -31,6 +54,10 @@ body {
 #search {
   float: left;
   padding: 5px 5px;
+}
+
+#search input {
+  float: left;
 }
 
 #new, #all, #shows {
@@ -62,7 +89,7 @@ input {
   cursor: pointer;
   position: relative;
 }
-.episode:after, .showinfo:after, #navbar:after { 
+.episode:after, .showinfo:after, .field:after, #navbar:after { 
   content: "."; 
   visibility: hidden; 
   display: block; 
