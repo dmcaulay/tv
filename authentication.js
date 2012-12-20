@@ -1,5 +1,6 @@
 var db = require('./lib/mongoWrapper').db.add('users')
 var passport = require('passport')
+var passwordHash = require('password-hash')
 var flatironPassport = require('flatiron-passport')
 var LocalStrategy = require('passport-local').Strategy
 
@@ -26,39 +27,32 @@ var ensureLoggedIn = module.exports = function(options) {
   }
 }
 
-var validPassword = function(user, password) {
-  return true
-}
-
 passport.use(new LocalStrategy(function(username, password, done) {
-  db.users.findOne({name:username},function(err, user) {
+  db.users.findOne({username:username},function(err, user) {
     if (err) return done(err) 
     if (!user) return done(null, false, { message: 'Incorrect username.' })
-    if (!validPassword(user, password)) {
+    if (!passwordHash.verify(password, user.password)) {
       return done(null, false, { message: 'Incorrect password.' })
     }
     return done(null, user)
   })
 }))
 
-var usersById = {}
+var users = {}
 passport.serializeUser(function(user, done) {
-  var id = user._id.toString()
-  usersById[id] = user
-  done(null, id);
+  users[user.username] = user
+  done(null, user.username);
 })
 
 passport.deserializeUser(function(id, done) {
-  if (!usersById[id]) return done(new Error('unknown user id:' + id))
-  done(null, usersById[id])
+  if (!users[id]) return done(new Error('unknown user id:' + id))
+  done(null, users[id])
 })
 
-module.exports = function(app) {
-  app.use(flatironPassport)
-  app.http.before.push(ensureLoggedIn({safe: ['/signup']}))
-
-  app.router.post('/login', flatironPassport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/login'
-  }))
+module.exports = {
+  init: function(app) {
+    app.use(flatironPassport)
+    app.http.before.push(ensureLoggedIn({safe: ['/signup']}))
+  },
+  authenticate: flatironPassport.authenticate
 }
