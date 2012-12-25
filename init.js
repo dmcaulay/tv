@@ -9,7 +9,7 @@ module.exports = function(app) {
     nextDay : '[Tomorrow]',
     lastWeek : '[last] dddd',
     nextWeek : 'dddd',
-    sameElse : 'ddd, MMM Do'
+    sameElse : 'ddd, MMM Do, \'YY'
   };
 
   moment.fn.fromCalendar = moment.prototype.fromCalendar = function() {
@@ -24,6 +24,8 @@ module.exports = function(app) {
       diff < 1 ? calendar.sameDay :
       diff < 2 ? calendar.nextDay :
       diff < 7 ? '[diff]'  : calendar.sameElse;
+
+    // if (this.year() != moment().year()) format = 'M/D/YY'
 
     if (format === '[diff]') {
       return this.from(comparable);

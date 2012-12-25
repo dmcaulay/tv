@@ -7,9 +7,24 @@ var render = require('../views')
 var _ = require('underscore')
 
 module.exports = function(router, errorHandler) {
-  router.get('/shows', function(id) {
-    this.req.user.shows.forEach(function(s) { s.editable = false })
-    render(this.res, 'shows', this.req.user.shows)
+  router.get('/', function(id) {
+    var res = this.res
+    var user = this.req.user
+    db.episodes.find({user: user.username, subscribed: true, watched: false}, function(err, cursor) {
+      if (err) return errorHandler(res, err)
+      cursor.toArray(function(err, episodes) {
+        if (err) return errorHandler(res, err)
+        episodes = _.groupBy(episodes, 'showid')
+        user.shows.forEach(function(show) {
+          var showid = show.showid
+          if (!episodes[showid]) return show.watched = true
+          var showEp = episodes[showid]
+          show.length = showEp.length
+          show.date = _.first(_.sortBy(showEp, 'airdate')).airdate
+        })
+        render(res, 'shows', user.shows)
+      })
+    })
   })
 
   router.get('/shows/:id', function(id) {

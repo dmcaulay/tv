@@ -105,14 +105,17 @@ input {
   text-decoration:underline;
 }
 
-.number {
+.number, .length {
   float: left;
   width: 10%;
 }
 
-.title {
+.title, .name {
   float: left;
   width: 35%;
+}
+.name:hover {
+  text-decoration:underline;
 }
 
 .network {
@@ -122,13 +125,6 @@ input {
 
 .date {
   float: right;
-}
-
-.name {
-  float: left;
-}
-.name:hover {
-  text-decoration:underline;
 }
 
 .plus {

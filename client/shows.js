@@ -7,8 +7,12 @@ var init = function() {
   $showinfos = $('.showinfo')
   $showinfos.each(function() {
     var $show = $(this)
-    if (!$show.data('subscribed')) $show.find('.subscribed').hide()
-    if (!$show.data('editable')) $show.find('.plus').hide()
+    if ($show.data('editable')) {
+      if (!$show.data('subscribed')) $show.find('.subscribed').hide()
+    } else {
+      if (!$show.data('watched')) $show.find('.subscribed').show()
+      $show.find('.plus').hide()
+    }
   })
   $showinfos.click(function(ev) {
     var $show = (ev.target.className === 'showinfo') ? $(ev.target) : $(ev.target.parentElement)
