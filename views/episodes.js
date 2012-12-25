@@ -20,6 +20,10 @@ module.exports = function(episodes, callback) {
     map.class('network').use('network')
     map.class('date').use('date')
     episodes = plates.bind(templates['episode'], episodes, map)
-    callback(null, plates.bind(templates['index'], {content:episodes}))
+    map = new plates.Map()
+    map.class('nav').use('nav')
+    map.class('navLink').use('navLink').as('href')
+    map.class('content').use('content')
+    callback(null, plates.bind(templates['index'], {content:episodes, nav: 'logout', navLink: '/logout'}, map))
   })
 }

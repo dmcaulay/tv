@@ -60,7 +60,7 @@ form {
   float: left;
 }
 
-#new, #all, #shows {
+.nav {
   float: right;
   padding: 10px 10px;
 }
@@ -75,10 +75,10 @@ input {
   font-family: 'MuseoSlab', Arial, sans-serif;
   font-size: 25px;
   text-align: left;
-  border-radius: 25px;
+  border-radius: 5px;
 }
 
-#content {
+.content {
   text-align: left;
 }
 
