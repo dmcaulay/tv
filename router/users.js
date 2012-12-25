@@ -11,6 +11,10 @@ module.exports = function(router, errorHandler) {
     successRedirect: '/',
     failureRedirect: '/login'
   }))
+  router.get('/logout', function() {
+    this.req.logout()
+    this.res.redirect('/login')
+  })
 
   router.get('/signup', function() {
     render(this.res, 'signup')
