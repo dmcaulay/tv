@@ -1,10 +1,18 @@
 var $ = require('jquery-browserify')
 var request = require('../lib/request')
 
+function getRes($el) {
+  return {
+    end: function(html) {
+      $el.html(html)
+    }
+  }
+}
+
 var $dialog
 var $links
 
-var init = function() {
+var init = function(render) {
   $dialog = $('#dialog')
   $inner = $('#inner')
   $links = $('.create-event')

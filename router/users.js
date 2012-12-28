@@ -1,7 +1,7 @@
 var auth = require('../authentication')
 var db = require('../lib/mongoWrapper').db.add('users')
 var passwordHash = require('password-hash')
-var render = require('../views')
+var render = require('../views')()
 
 module.exports = function(router, errorHandler) {
   router.get('/login', function() {

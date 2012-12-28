@@ -1,6 +1,6 @@
 var tvrage = require('../external/tvrage')
 var user = require('../models/user')
-var render = require('../views')
+var render = require('../views')()
 var _ = require('underscore')
 
 module.exports = function(router, errorHandler) {

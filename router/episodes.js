@@ -1,6 +1,6 @@
 var episode = require('../models/episode')
 var moment = require('moment')
-var render = require('../views')
+var render = require('../views')()
 var _ = require('underscore')
 
 module.exports = function(router, errorHandler) {
