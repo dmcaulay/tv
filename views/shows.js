@@ -28,6 +28,8 @@ module.exports = function(shows, callback) {
     map.class('nav').use('nav')
     map.class('navLink').use('navLink').as('href')
     map.class('content').use('content')
-    callback(null, plates.bind(templates['index'], {content:shows, nav: 'logout', navLink: '/logout'}, map))
+    shows = plates.bind(templates['index'], {content:shows, nav: 'logout', navLink: '/logout'}, map)
+    shows += templates['avocado']
+    callback(null, shows)
   })
 }
