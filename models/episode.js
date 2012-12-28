@@ -29,9 +29,17 @@ function find(user, showid, callback) {
   })
 }
 
+function unwatched(user, callback) {
+  db.episodes.find({user: user.username, subscribed: true, watched: false}, function(err, cursor) {
+    if (err) return callback(err)
+    cursor.toArray(callback)
+  })
+}
+
 module.exports = {
   subscribe: subscribe,
   unsubscribe: unsubscribe,
   watch: watch,
-  find: find
+  find: find,
+  unwatched: unwatched
 }

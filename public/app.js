@@ -9784,8 +9784,6 @@ module.exports = {
 require.define("/lib/request.js",function(require,module,exports,__dirname,__filename,process,global){var http = require('http')
 
 var request = module.exports = function(options,callback) {
-  // options.port = options.port || 80 
-  // options.hostname = options.hostname || 'tvtrack.jit.su'
   var req = http.request(options, function(res) {
     if (res.setEncoding) res.setEncoding('utf8')
     var body = ''
@@ -10845,12 +10843,17 @@ var init = function() {
   $showinfos = $('.showinfo')
   $showinfos.each(function() {
     var $show = $(this)
-    if (!$show.data('subscribed')) $show.find('.subscribed').hide()
-    if (!$show.data('editable')) $show.find('.plus').hide()
+    if ($show.data('editable')) {
+      if (!$show.data('subscribed')) $show.find('.subscribed').hide()
+    } else {
+      $show.find('.subscribed').hide()
+      $show.find('.plus').hide()
+    }
   })
   $showinfos.click(function(ev) {
     var $show = (ev.target.className === 'showinfo') ? $(ev.target) : $(ev.target.parentElement)
     if (!$show.data('editable')) {
+      if (!$show.find('.showLink').length) return
       return window.location = $show.find('.showLink').attr('href')
     }
     var subscribed = $show.data('subscribed')

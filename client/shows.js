@@ -10,13 +10,14 @@ var init = function() {
     if ($show.data('editable')) {
       if (!$show.data('subscribed')) $show.find('.subscribed').hide()
     } else {
-      if (!$show.data('watched')) $show.find('.subscribed').show()
+      $show.find('.subscribed').hide()
       $show.find('.plus').hide()
     }
   })
   $showinfos.click(function(ev) {
     var $show = (ev.target.className === 'showinfo') ? $(ev.target) : $(ev.target.parentElement)
     if (!$show.data('editable')) {
+      if (!$show.find('.showLink').length) return
       return window.location = $show.find('.showLink').attr('href')
     }
     var subscribed = $show.data('subscribed')

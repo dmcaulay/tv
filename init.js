@@ -25,8 +25,6 @@ module.exports = function(app) {
       diff < 2 ? calendar.nextDay :
       diff < 7 ? '[diff]'  : calendar.sameElse;
 
-    // if (this.year() != moment().year()) format = 'M/D/YY'
-
     if (format === '[diff]') {
       return this.from(comparable);
     } else {
