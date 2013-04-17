@@ -36,10 +36,26 @@ function unwatched(user, callback) {
   })
 }
 
+function update(user, show, episodes, callback) {
+  async.forEach(episodes, function(ep, done) {
+    ep.user = user.username
+    db.episodes.findOne({user: user.username, showid: show.showid, number: ep.number}, function(err, episode) {
+      if (err) return done(err)
+      if (!episode) {
+        ep.subscribed = true
+        ep.watched = false
+      }
+      db.episodes.update({user: user.username, showid: show.showid, number: ep.number}, {$set: ep}, {upsert: true, 'new': true}, done)
+    })
+  }, callback)
+}
+
+
 module.exports = {
   subscribe: subscribe,
   unsubscribe: unsubscribe,
   watch: watch,
   find: find,
-  unwatched: unwatched
+  unwatched: unwatched,
+  update: update
 }

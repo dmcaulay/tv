@@ -1,4 +1,5 @@
 var episode = require('../models/episode')
+var usermodel = require('../models/user')
 var moment = require('moment')
 var render = require('../views')()
 var _ = require('underscore')
@@ -7,6 +8,7 @@ module.exports = function(router, errorHandler) {
   router.get('/', function(id) {
     var res = this.res
     var user = this.req.user
+    usermodel.updateEpisodes(user)
     episode.unwatched(user, function(err, episodes) {
       if (err) return errorHandler(res, err)
       episodes = _.groupBy(episodes, 'showid')
